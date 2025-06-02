@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AzureFunctionsVersion>v4</AzureFunctionsVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="DeskBooking.API\DeskBooking.API.csproj" />
+    <ProjectReference Include="DeskBooking.Application\DeskBooking.Application.csproj" />
+    <ProjectReference Include="DeskBooking.Core\DeskBooking.Core.csproj" />
+    <ProjectReference Include="DeskBooking.Infrastructure\DeskBooking.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.17" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.17">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.17" />
+    <PackageReference Include="FluentValidation" Version="10.4.0" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="DotNetEnv" />
+  </ItemGroup>
+</Project> 
