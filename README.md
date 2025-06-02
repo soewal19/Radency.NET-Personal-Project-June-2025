@@ -7,32 +7,37 @@ A full-stack application for managing workspace bookings in an office environmen
 ### Frontend
 - Angular 17
 - TypeScript
-- SCSS
+- Tailwind CSS
 - Angular Material
 - RxJS
+- NgRx (State Management)
 
 ### Backend
-- Spring Boot
-- Java
-- Spring Data JPA
+- .NET Core 8.0
+- C#
+- Entity Framework Core
 - PostgreSQL
-- Docker & Docker Compose
+- Azure App Service
 
 ## Project Structure
 ```
 desk-booking/
-├── desk-booking-ui/          # Angular frontend
-├── desk-booking-backend/     # Spring Boot backend
-├── docker-compose.yml        # Docker configuration
-├── .env                      # Environment variables
-└── deploy-azure.sh          # Azure deployment script
+├── DeskBooking.API/          # .NET Core Web API
+├── DeskBooking.Core/         # Core domain models and interfaces
+├── DeskBooking.Application/  # Application services and DTOs
+├── DeskBooking.Infrastructure/ # Infrastructure implementation
+├── DeskBooking.UI/           # Angular frontend with Tailwind CSS
+├── deploy-azure.ps1         # Azure deployment script
+└── deploy-azure.sh          # Alternative Azure deployment script
 ```
 
 ## Prerequisites
-- Docker and Docker Compose
-- Node.js and npm
-- Java 17 or higher
-- Azure CLI
+- .NET Core 8.0 SDK
+- Node.js 18 or higher
+- Angular CLI
+- PostgreSQL
+- Azure CLI (for deployment)
+- PowerShell (for Windows deployment)
 
 ## Local Development Setup
 
@@ -42,55 +47,59 @@ git clone <repository-url>
 cd desk-booking
 ```
 
-2. Create a `.env` file in the root directory:
-```env
-DATABASE_USERNAME=postgres
-DATABASE_PASSWORD=postgres
-DATABASE_NAME=deskbooking
-DATABASE_HOST=db
-NODE_ENV=development
+2. Configure the database connection in `appsettings.json`:
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Database=deskbooking;Username=postgres;Password=your_password"
+  }
+}
 ```
 
-3. Start the application using Docker Compose:
+3. Run database migrations:
 ```bash
-docker-compose up
+dotnet ef database update --project DeskBooking.Infrastructure --startup-project DeskBooking.API
 ```
 
-4. Access the application:
+4. Start the backend:
+```bash
+cd DeskBooking.API
+dotnet run
+```
+
+5. Start the frontend:
+```bash
+cd DeskBooking.UI
+npm install
+ng serve
+```
+
+6. Access the application:
 - Frontend: http://localhost:4200
-- Backend API: http://localhost:8080
+- Backend API: http://localhost:5000
 
 ## Deployment to Azure
 
 ### Prerequisites
 - Azure account
 - Azure CLI installed
-- Docker and Docker Compose installed
-- Git repository with your project
+- PowerShell (for Windows)
 
 ### Deployment Steps
 
 1. **Install Azure CLI**
    - [Download and install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 
-2. **Make the deployment script executable:**
-```bash
-chmod +x deploy-azure.sh
-```
-
-3. **Run the deployment script:**
-```bash
-./deploy-azure.sh
+2. **Run the deployment script:**
+```powershell
+.\deploy-azure-portal.ps1
 ```
 
 The script will:
-- Log in to Azure
-- Create a resource group
-- Create an App Service Plan
-- Create a Web App
-- Deploy your Docker Compose application
-- Configure environment variables
-- Open your application in the browser
+- Build the application
+- Create a deployment package
+- Provide instructions for Azure Portal deployment
+- Open Azure Portal in your browser
 
 ### Manual Deployment (Alternative)
 
@@ -108,17 +117,17 @@ az group create --name desk-booking-rg --location westeurope
 
 3. **Create an App Service Plan:**
 ```bash
-az appservice plan create --name desk-booking-plan --resource-group desk-booking-rg --is-linux
+az appservice plan create --name desk-booking-plan --resource-group desk-booking-rg --sku B1 --is-linux
 ```
 
 4. **Create a Web App:**
 ```bash
-az webapp create --resource-group desk-booking-rg --plan desk-booking-plan --name desk-booking-app --multicontainer-config-type compose --multicontainer-config-file docker-compose.yml
+az webapp create --resource-group desk-booking-rg --plan desk-booking-plan --name desk-booking-app --runtime "DOTNETCORE|8.0"
 ```
 
 5. **Configure environment variables:**
 ```bash
-az webapp config appsettings set --resource-group desk-booking-rg --name desk-booking-app --settings @.env
+az webapp config appsettings set --resource-group desk-booking-rg --name desk-booking-app --settings ASPNETCORE_ENVIRONMENT=Production
 ```
 
 ## API Documentation
